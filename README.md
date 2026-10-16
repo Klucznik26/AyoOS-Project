@@ -11,7 +11,7 @@
 ![Boot](https://img.shields.io/badge/Boot-UEFI-344054?style=for-the-badge)
 ![Source](https://img.shields.io/badge/Source-Private-7952b3?style=for-the-badge)
 
-**[Introduction](#-what-is-ayoos) · [Architecture](#-architecture) · [Filesystems](#-the-filesystem-universe) · [Users & security](#-users-groups--security) · [AyoRetro](#-ayoretro) · [Roadmap](#-roadmap)**
+**[Introduction](#-what-is-ayoos) · [Architecture](#-architecture) · [Filesystems](#-the-filesystem-universe) · [Users & security](#-users-groups--security) · [Legacy I/O](#-legacy-ports--interfaces) · [AyoRetro](#-ayoretro) · [Roadmap](#-roadmap)**
 
 </div>
 
@@ -64,6 +64,7 @@ flowchart TB
 | **AyoNet** | TCP/IP, TCP/UDP, DNS, DHCP, ICMP, HTTP/HTTPS | Implemented; evolving |
 | **Audio** | Intel HDA and userspace audio decoding | Implemented; streaming improvements planned |
 | **Input / USB** | xHCI, HID and PS/2 paths | Implemented; hardware coverage varies |
+| **Legacy I/O** | LPT, COM, gameport, MPU-401 MIDI and partial FireWire (IEEE 1394) | Implemented to varying degrees; hardware validation ongoing |
 | **GPU** | virtio/virgl and a purpose-built AMD RDNA compositing backend | In development |
 | **User security** | Basic accounts and permission hooks, expanded security design | Partially implemented |
 | **Automated testing** | Build, QEMU boot and filesystem regression workflows | Configured; individual runs may fail |
@@ -200,6 +201,22 @@ The longer-term model includes isolated anonymous guest sessions, per-user trash
 
 ---
 
+## 🔌 Legacy ports & interfaces
+
+AyoOS also develops **native support for classic PC hardware interfaces** — not only legacy disk formats and emulators. The following drivers are implemented to varying degrees, with hardware validation still ongoing.
+
+| Interface | Current implementation | Status |
+|:--|:--|:--|
+| **LPT / Centronics (IEEE 1284)** | SPP parallel I/O, reverse/device-ID negotiation, EPP/ECP modes, IRQ and ISA DMA support | **Advanced implementation**; hardware coverage still being verified |
+| **COM / serial (16550 UART)** | Classic serial ports, configurable baud rates, transmit/receive, IRQ and loopback diagnostics | **Implemented**; hardware flow control remains limited |
+| **Gameport** | Classic analog joystick axes and buttons | **Basic implementation**; axis calibration not yet provided |
+| **MIDI (MPU-401)** | Legacy UART-mode MIDI input/output and note messages | **Implemented**; does not yet include USB MIDI |
+| **FireWire (IEEE 1394)** | Partial OHCI-1394 driver: controller setup, Self-ID topology, asynchronous DMA transactions and limited isochronous transfers | **Partial / in development**; tested with a host controller model, **not yet validated on physical FireWire hardware** |
+
+These features are **not a claim of universal device compatibility**. FireWire storage protocols such as **SBP-2**, DV/video streaming stacks and full IEEE 1394 services are not yet implemented.
+
+---
+
 ## 🕹️ AyoRetro — classic computers, native desktop integration
 
 **AyoRetro** is a growing family of user-space emulator applications that integrate classic computing platforms into **Sayari**. The idea is to use real emulator cores with AyoOS-native windows, display buffers, media and input — not merely display screenshots of old machines.
@@ -270,6 +287,6 @@ Interested in operating systems, obscure filesystems, retro computing or native 
 
 *Independent OS engineering · Filesystem interoperability · Desktop computing · Retro heritage*
 
-**Project snapshot: 14 October 2026**
+**Project snapshot: 16 October 2026**
 
 </div>
